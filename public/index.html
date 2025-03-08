@@ -8,11 +8,36 @@
   </head>
   <body>
     <h1>This is the chatting app</h1>
-    <button onClick="createConnection()">Create Connection</button>
+    <input
+      type="text"
+      id="msg"
+      placeholder="Enter message"
+      onkeypress="handleEnter(event)"
+    />
+    <br /><br />
+    <button onClick="sendMessage()">Send</button>
+    <div id="all_messages"></div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      const createConnection = () => {
-        const socket = io();
+      const socket = io();
+      let input = document.getElementById("msg");
+      console.log("Hello");
+      let Allmessages = document.getElementById("all_messages");
+
+      socket.on("everyone", (message) => {
+        let p = document.createElement("p");
+        p.innerText = message;
+        Allmessages.appendChild(p);
+      });
+
+      const sendMessage = () => {
+        let msg = input.value;
+        socket.emit("user-message", msg);
+      };
+      const handleEnter = (e) => {
+        if (e.key == "Enter") {
+          sendMessage();
+        }
       };
     </script>
   </body>

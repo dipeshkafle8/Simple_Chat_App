@@ -7,11 +7,16 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
+app.use(express.static("public"));
+
 io.on("connection", (socket) => {
+  socket.on("user-message", (message) => {
+    console.log(message);
+    io.emit("everyone", message);
+  });
+
   console.log("New user Connected");
 });
-
-app.use(express.static("public"));
 
 app.get("/", (req, res) => {
   console.log("Yes I am getting request");
